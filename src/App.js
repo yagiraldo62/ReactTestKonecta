@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Router from './layouts/AnimatedRouter';
+import Views from './views/';
+import { Redirect } from '@reach/router';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core/styles';
+import useTheme from './utils/hooks/theme';
+import PrivateRoute from './layouts/PrivateRoute';
+import UnprotectedRoute from './layouts/UnprotectedRoute';
+
+const { Login, Product, CreateProduct } = Views;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const theme = useTheme();
+	return (
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+
+			<Router>
+				<UnprotectedRoute path="/login" Component={Login} />
+				<PrivateRoute path="/" Component={Product} />
+
+				<PrivateRoute path="/new" Component={CreateProduct} />
+				<Redirect noThrow from="*" to="/login" />
+			</Router>
+		</ThemeProvider>
+	);
 }
 
 export default App;
